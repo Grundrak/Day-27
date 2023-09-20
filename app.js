@@ -27,12 +27,10 @@ app.get('/products/:id',(req ,res ) =>{
 
 app.get('/products/p/search',(req ,res ) =>{
     const searchquery = req.query.q.toLowerCase();
-    const minPrice = parseFloat(req.query.minPrice);
-    const maxPrice = parseFloat(req.query.maxPrice);
-
- let product = products.filter(item => item.name.toLowerCase().includes(searchquery) &&
-        item.price >= minPrice &&
-        item.price <= maxPrice)
+    let minPrice = parseFloat(req.query.minPrice);
+   let maxPrice = parseFloat(req.query.maxPrice);
+   
+ let product = products.filter(item => item.name.toLowerCase().includes(searchquery) && (item.price >= minPrice && item.price <= maxPrice))
  if(product.length > 0){
     res.status(200).json(product);
  }else {
