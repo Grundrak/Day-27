@@ -8,13 +8,14 @@ let products = [
     { id: 2, name: 'Samsung Galaxy S21', price: 999.99 },
     { id: 3, name: 'Sony PlayStation 5', price: 499.99 },
     { id: 4, name: 'MacBook Pro 16', price: 2399.99 },
-    { id: 5, name: 'DJI Mavic Air 2', price: 799.99 },
+    { id: 5, name: 'iPhone 12 Pro', price: 2500.99 },
+    { id: 6, name: 'DJI Mavic Air 2', price: 799.99 },
   ];
 
 app.get('/products',(req ,res ,next) =>{
     res.send(products);
 })
-app.get('/products/:id',(req ,res ,next) =>{
+app.get('/products/:id',(req ,res ) =>{
    let product = products.find(product => product.id === parseInt(req.params.id))
    if(product){
     res.status(200).send(product)
@@ -24,19 +25,22 @@ app.get('/products/:id',(req ,res ,next) =>{
 });
 
 
-app.get('/products/p/search',(req ,res ,next) =>{
+app.get('/products/p/search',(req ,res ) =>{
     const searchquery = req.query.q.toLowerCase();
+    const minPrice = parseFloat(req.query.minPrice);
+    const maxPrice = parseFloat(req.query.maxPrice);
 
- let product = products.find(item => item.name.toLowerCase().includes(searchquery))
+ let product = products.filter(item => item.name.toLowerCase().includes(searchquery) &&
+        item.price >= minPrice &&
+        item.price <= maxPrice)
  if(product.length > 0){
-    
     res.status(200).json(product);
  }else {
     res.sendStatus(404);
  }
-})
+});
 
-app.post('/products',(req ,res ,next) =>{
+app.post('/products',(req ,res) =>{
 const createproduct = ('products',req.body)
 products.push(createproduct);
 if(createproduct){
